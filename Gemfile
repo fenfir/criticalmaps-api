@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '1.9.3', :engine => 'jruby', :engine_version => '1.7.24'
+ruby '2.2.4', :engine => 'jruby', :engine_version => '1.7.24'
 
 gem "rake"
 gem "puma"
