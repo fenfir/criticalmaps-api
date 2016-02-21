@@ -4,24 +4,25 @@ MAINTAINER Stephan Lindauer
 
 RUN apt-get -y update
 RUN apt-get -y upgrade
-
 RUN apt-get -y install build-essential wget git zlib1g-dev libssl-dev libreadline-dev libyaml-dev libxml2-dev libxslt-dev
-
 RUN apt-get clean
 
 RUN wget http://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.0.tar.gz
+RUN echo "ba5ba60e5f1aa21b4ef8e9bf35b9ddb57286cb546aac4b5a28c71f459467e507 ruby-2.3.0.tar.gz" | sha256sum -c
 RUN tar -xzvf ruby-2.3.0.tar.gz
 RUN rm ruby-2.3.0.tar.gz
 
-RUN cd /ruby-2.3.0; ./configure; make install
+WORKDIR /ruby-2.3.0
+RUN ./configure; make install
 
 RUN gem update --system
 RUN gem install bundler
 
 ADD . /criticalmaps-api
+WORKDIR /criticalmaps-api
+RUN bundle install
 
-RUN cd /criticalmaps-api; bundle install
-
+EXPOSE 4567
 
 CMD ["ruby", "/criticalmaps-api/config.ru"]
 
