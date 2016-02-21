@@ -2,26 +2,28 @@ FROM ubuntu:trusty
 
 MAINTAINER Stephan Lindauer
 
-RUN apt-get -y install wget
-RUN apt-get -y install software-properties-common
-
-RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
-
-RUN apt-add-repository ppa:brightbox/ruby-ng
-RUN add-apt-repository ppa:webupd8team/java
 RUN apt-get -y update
+RUN apt-get -y upgrade
 
-RUN apt-get -y install oracle-java8-installer
+RUN apt-get -y install build-essential wget git zlib1g-dev libssl-dev libreadline-dev libyaml-dev libxml2-dev libxslt-dev
 
-RUN wget https://s3.amazonaws.com/jruby.org/downloads/9.0.5.0/jruby-bin-9.0.5.0.tar.gz
-RUN tar -xzvf jruby-bin-9.0.5.0.tar.gz
-RUN rm jruby-bin-9.0.5.0.tar.gz
+RUN apt-get clean
 
-ENV JRUBY_HOME '/jruby-9.0.5.0'
-ENV PATH $JRUBY_HOME/bin:$PATH
+RUN wget http://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.0.tar.gz
+RUN tar -xzvf ruby-2.3.0.tar.gz
+RUN rm ruby-2.3.0.tar.gz
+
+RUN cd /ruby-2.3.0; ./configure; make install
+
+RUN gem update --system
+RUN gem install bundler
+
+ADD . /criticalmaps-api
+
+RUN cd /criticalmaps-api; bundle install
 
 
-# CMD ["puma", "--port", "80"]
+CMD ["ruby", "/criticalmaps-api/config.ru"]
 
 
 
