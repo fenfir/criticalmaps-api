@@ -1,6 +1,6 @@
 FROM ubuntu:trusty
 
-MAINTAINER Stephan Lindauer
+MAINTAINER Stephan Lindauer <stephanlindauer@posteo.de>
 
 RUN apt-get -y update
 RUN apt-get -y upgrade
@@ -13,6 +13,7 @@ RUN tar -xzvf ruby-2.3.0.tar.gz
 RUN rm ruby-2.3.0.tar.gz
 
 WORKDIR /ruby-2.3.0
+ENV CONFIGURE_OPTS --disable-install-rdoc
 RUN ./configure; make install
 
 RUN gem update --system
