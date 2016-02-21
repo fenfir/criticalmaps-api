@@ -2,19 +2,23 @@ FROM ubuntu:trusty
 
 MAINTAINER Stephan Lindauer
 
-apt-get -y update
-apt-get -y upgrade
+RUN apt-get -y install wget
+RUN apt-get -y install software-properties-common
 
-apt-get -y install ruby wget build-essential
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
 
-cd /jruby
-wget https://s3.amazonaws.com/jruby.org/downloads/1.7.24/jruby-bin-1.7.24.tar.gz
-tar -xzvf jruby-bin-1.7.24.tar.gz
+RUN apt-add-repository ppa:brightbox/ruby-ng
+RUN add-apt-repository ppa:webupd8team/java
+RUN apt-get -y update
 
-RUN cd ruby-install-0.5.0/
-RUN make install
-RUN ruby-install jruby 1.7.9
+RUN apt-get -y install oracle-java8-installer
 
+RUN wget https://s3.amazonaws.com/jruby.org/downloads/9.0.5.0/jruby-bin-9.0.5.0.tar.gz
+RUN tar -xzvf jruby-bin-9.0.5.0.tar.gz
+RUN rm jruby-bin-9.0.5.0.tar.gz
+
+ENV JRUBY_HOME '/jruby-9.0.5.0'
+ENV PATH $JRUBY_HOME/bin:$PATH
 
 
 # CMD ["puma", "--port", "80"]
