@@ -5,5 +5,4 @@ class Application < Sinatra::Base
     "<p>hello world</p>"
   end
 
-  run!
 end
