@@ -11,7 +11,7 @@ install:
   - travis_retry docker build -t $DOCKER_IMAGE_NAME .
 
 script:
-  - docker run docker run -p 4567:4567 --name $DOCKER_IMAGE_NAME
+  - docker run -d -p 4567:4567 $DOCKER_IMAGE_NAME
 
 env:
   global:
