@@ -7,6 +7,13 @@ services:
 # before_install:
 #   - bundle exec rake test
 
+before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - docker-compose -version
+
 install:
   - travis_retry docker build -t $DOCKER_IMAGE_NAME .
 
