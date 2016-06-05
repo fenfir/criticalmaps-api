@@ -2,8 +2,8 @@ language: ruby
 rvm:
   - 2.2.3
 
-before_install:
-  - bundle exec rake test
+# before_install:
+#   - bundle exec rake test
 
 install:
   - travis_retry docker build -t $DOCKER_IMAGE_NAME .
