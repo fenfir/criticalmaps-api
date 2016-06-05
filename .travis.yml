@@ -17,6 +17,7 @@ script:
   - sleep 5
   - curl localhost:4567
   - curl google.de
+  - docker-compose up
 
 env:
   global:

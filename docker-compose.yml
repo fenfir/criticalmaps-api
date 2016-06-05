@@ -1,0 +1,33 @@
+web:
+  build: .
+  # command: bin/web
+  environment:
+    - RACK_ENV=development
+    # labels:
+    # - convox.port.443.protocol=tls
+  ports:
+    - 80:4567
+    - 443:3000
+  # volumes:
+  #   - .:/app
+  links:
+    - postgres
+    # - redis
+# worker:
+#   build: .
+#   command: bin/worker
+#   environment:
+#     - RACK_ENV=development
+#   volumes:
+#     - .:/app
+#   links:
+#     - postgres
+#     - redis
+# redis:
+#   image: convox/redis
+#   ports:
+#     - 6379
+postgres:
+  image: convox/postgres
+  ports:
+    - 5432
