@@ -13,6 +13,7 @@ install:
 script:
   - docker run -d -p 4567:4567 $DOCKER_IMAGE_NAME
   - docker ps | grep -q $DOCKER_IMAGE_NAME
+  - docker ps
   - sleep 5
   - curl localhost:4567
   - curl google.de
