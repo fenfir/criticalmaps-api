@@ -1,3 +1,3 @@
-require_relative "app/app.rb"
+require "./app/app.rb"
 
-Application.run!
+run Sinatra::Application

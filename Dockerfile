@@ -26,10 +26,4 @@ ADD . /criticalmaps-api
 WORKDIR /criticalmaps-api
 RUN bundle install
 
-# CMD ["ruby", "/criticalmaps-api/config.ru"]
-
-# CMD ["ruby", "/criticalmaps-api/config.r/u"]
 CMD ["foreman","start","-d","/criticalmaps-api"]
-#
-# CMD ["bundle", "exec", "rackup", "-p", "8080", "--host", "0.0.0.0" ]
-# CMD ["echo", "exec", "rackup", "-p", "4567", "--host", "0.0.0.0" ]

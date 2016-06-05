@@ -1,8 +1,7 @@
-require 'sinatra/base'
+require 'sinatra'
 
-class Application < Sinatra::Base
-  get "/" do
-    "<p>hello world</p>"
-  end
+get '/' do
+  "Hello World!"
 
+  puts "miau"
 end
