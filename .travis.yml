@@ -1,6 +1,17 @@
 language: ruby
+rvm:
+  - 2.2.3
+
+before_install:
+  - bundle exec rake test
+
+install:
+  - travis_retry docker build -t $DOCKER_IMAGE_NAME .
 
 script:
-  - bundle exec rake test
-rvm:
-  - 2.3.0
+  - docker run docker run -p 4567:4567 -d $DOCKER_IMAGE_NAME
+
+env:
+  global:
+    - DOCKER_COMPOSE_VERSION=1.5.2
+    - DOCKER_IMAGE_NAME=criticalmaps-api

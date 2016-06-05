@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 
-ruby "2.3.0"
+ruby "2.2.3"
 
-gem "rake"
 gem "sinatra"
+gem "foreman"
 gem 'thin'
+gem 'rack'
