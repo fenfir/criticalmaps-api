@@ -15,6 +15,7 @@ script:
   - docker ps | grep -q $DOCKER_IMAGE_NAME
   - sleep 5
   - curl localhost:4567
+  - curl google.de
 
 env:
   global:
