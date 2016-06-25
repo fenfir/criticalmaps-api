@@ -8,15 +8,17 @@ web:
     - postgres
   restart: always
   environment:
-    - POSTGRES_USER=bla
-    - POSTGRES_PASSWORD=bla
-    - POSTGRES_PORT=5433
+    POSTGRES_USER: bla
+    POSTGRES_PASSWORD: bla
+    POSTGRES_PORT: 5433
+    POSTGRES_DB: criticalmaps
 
 postgres:
   image: postgres
   environment:
     POSTGRES_USER: bla
     POSTGRES_PASSWORD: bla
+    POSTGRES_DB: criticalmaps
   ports:
     #remap ports because travis has something listening on 5432 already
     - "5433:5432"
