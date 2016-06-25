@@ -8,6 +8,7 @@ var pgp = require('pg-promise')();
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var databaseInitializer = require('./initializer/database.js');
 
 var app = express();
 
@@ -19,6 +20,8 @@ db = pgp({
   user: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD
 });
+
+databaseInitializer.run();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

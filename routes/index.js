@@ -5,7 +5,6 @@ var debug = require('debug')('http');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-
     db.task(t => {
             return t.none('CREATE TABLE IF NOT EXISTS foo (id SERIAL, bar varchar);')
                 .then(dontCare => {

@@ -10,7 +10,7 @@ web:
   environment:
     POSTGRES_USER: bla
     POSTGRES_PASSWORD: bla
-    POSTGRES_PORT: 5433
+    POSTGRES_PORT: 1337
     POSTGRES_DB: criticalmaps
 
 postgres:
@@ -21,4 +21,4 @@ postgres:
     POSTGRES_DB: criticalmaps
   ports:
     #remap ports because travis has something listening on 5432 already
-    - "5433:5432"
+    - "1337:5432"
