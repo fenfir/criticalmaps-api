@@ -1,0 +1,22 @@
+web:
+  image: $DOCKER_IMAGE_NAME
+  ports:
+    - "3000:3000"
+  environment:
+    NODE_ENV: production
+  links:
+    - postgres
+  restart: always
+  environment:
+    - POSTGRES_USER=bla
+    - POSTGRES_PASSWORD=bla
+    - POSTGRES_PORT=5433
+
+postgres:
+  image: postgres
+  environment:
+    POSTGRES_USER: bla
+    POSTGRES_PASSWORD: bla
+  ports:
+    #remap ports because travis has something listening on 5432 already
+    - "5433:5432"

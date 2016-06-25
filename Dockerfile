@@ -1,29 +1,19 @@
-FROM ubuntu:trusty
+FROM node:6.2.1
 
-MAINTAINER Stephan Lindauer <stephanlindauer@posteo.de>
+RUN groupadd -r node && useradd -r -g node node
 
-RUN apt-get -y update
-RUN apt-get -y upgrade
-RUN apt-get -y install build-essential wget git zlib1g-dev libssl-dev libreadline-dev libyaml-dev libxml2-dev libxslt-dev
-RUN apt-get clean
+ENV APP_DIR /usr/src/app/
 
-RUN wget http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.3.tar.gz
-RUN echo "df795f2f99860745a416092a4004b016ccf77e8b82dec956b120f18bdc71edce ruby-2.2.3.tar.gz" | sha256sum -c
-RUN tar -xzvf ruby-2.2.3.tar.gz
-RUN rm ruby-2.2.3.tar.gz
+RUN mkdir -p $APP_DIR
+WORKDIR $APP_DIR
 
-WORKDIR /ruby-2.2.3
-ENV CONFIGURE_OPTS --disable-install-rdoc
-RUN ./configure; make install
+COPY package.json $APP_DIR
+RUN npm install --silent
 
-RUN gem update --system
-RUN gem install bundler
+COPY . $APP_DIR
 
+RUN chown -R node:node $APP_DIR
 
-EXPOSE 4567
+EXPOSE 3000
 
-ADD . /criticalmaps-api
-WORKDIR /criticalmaps-api
-RUN bundle install
-
-CMD ["foreman","start","-d","/criticalmaps-api"]
+CMD [ "npm", "start" ]

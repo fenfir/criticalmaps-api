@@ -1,33 +1,23 @@
 web:
   build: .
-  # command: bin/web
+  ports:
+    - "3000:3000"
   environment:
-    - RACK_ENV=development
-    # labels:
-    # - convox.port.443.protocol=tls
-  ports:
-    - 80:4567
-    - 443:3000
-  # volumes:
-  #   - .:/app
+    NODE_ENV: development
+      #production
   links:
-    - postgres
-    # - redis
-# worker:
-#   build: .
-#   command: bin/worker
-#   environment:
-#     - RACK_ENV=development
-#   volumes:
-#     - .:/app
-#   links:
-#     - postgres
-#     - redis
-# redis:
-#   image: convox/redis
-#   ports:
-#     - 6379
-postgres:
-  image: convox/postgres
+    - db
+  restart: always
+  environment:
+    - POSTGRES_USER: bla
+    - POSTGRES_PASSWORD: bla
+    - POSTGRES_DB: criticalmaps
+
+db:
+  image: postgres
+  environment:
+    POSTGRES_USER: bla
+    POSTGRES_PASSWORD: bla
+    POSTGRES_DB: criticalmaps
   ports:
-    - 5432
+      - "5432:5432"

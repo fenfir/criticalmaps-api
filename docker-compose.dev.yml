@@ -1,0 +1,28 @@
+web:
+  build: .
+  ports:
+    # web server
+    - "3000:3000"
+    # node-inspector
+    - "5858:5858"
+    - "8080:8080"
+  environment:
+    NODE_ENV: development
+    DEBUG: "*"
+    POSTGRES_USER: bla
+    POSTGRES_PASSWORD: bla
+    POSTGRES_PORT: 5432
+  links:
+    - postgres
+  restart: always
+  volumes:
+    - .:/usr/src/app
+  entrypoint: npm run nodemonstart
+
+postgres:
+  image: postgres
+  environment:
+    POSTGRES_USER: bla
+    POSTGRES_PASSWORD: bla
+  ports:
+      - "5432:5432"
