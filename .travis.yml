@@ -11,7 +11,7 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 install:
-  - travis_retry docker build -t $DOCKER_IMAGE_NAME ./Dockerfile.nodejs
+  - travis_retry docker build -t $DOCKER_IMAGE_NAME -f ./Dockerfile.nodejs .
 
 script:
   - docker-compose -f docker-compose.travis.yml up -d
