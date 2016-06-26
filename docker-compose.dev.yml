@@ -1,5 +1,6 @@
 web:
   build: .
+  dockerfile: Dockerfile.nodejs
   ports:
     # web server
     - "3000:3000"
@@ -20,9 +21,19 @@ web:
   entrypoint: npm run nodemonstart
 
 postgres:
-  image: postgres
+  build: .
+  dockerfile: Dockerfile.postgres
   environment:
     POSTGRES_USER: bla
     POSTGRES_PASSWORD: bla
   ports:
       - "5432:5432"
+
+phppgadmin:
+  image: jacksoncage/phppgadmin
+  ports:
+   - "1234:80"
+  environment:
+    POSTGRES_HOST: postgres
+    POSTGRES_PORT: 5432
+    APACHE_SERVERNAME: jacksoncage.se
