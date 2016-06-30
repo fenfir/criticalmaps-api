@@ -12,12 +12,38 @@ router.post('/', function(req, res, next) {
         retrieve_other_locations(req, t1),
         t1.tx(function(t2) {
           return this.batch(save_messages_batch(req, t2));
-        })
+        }),
+        retrieve_chat_messages(req, t1)
       ]);
     })
     .then(function(data) {
-      var response_obj = {};
-      response_obj.locations = data[1];
+      var response_obj = {
+        locations: {},
+        chatMessages: {}
+      };
+
+      data[1].forEach(function(location_obj) {
+        response_obj.locations[location_obj.device] = {
+          "longitude": location_obj.longitude,
+          "latitude": location_obj.latitude,
+          "timestamp": location_obj.timestamp
+        }
+      });
+
+      data[3].forEach(function(message_obj) {
+        response_obj.chatMessages[message_obj.identifier] = {
+          "message": message_obj.text,
+          "timestamp": message_obj.timestamp
+        }
+      })
+
+      console.log("||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
+      console.log("||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
+      console.log(response_obj)
+
+      console.log("||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
+      console.log("||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
+
       res.send(response_obj);
     })
     .catch(function(error) {
@@ -28,7 +54,7 @@ router.post('/', function(req, res, next) {
     });
 });
 
-save_own_location_task = function(req, t) {
+var save_own_location_task = function(req, t) {
   if (req.body.hasOwnProperty("device") && req.body.hasOwnProperty("location")) {
     return t.none("insert into locations(device, longitude, latitude) values($1, $2, $3)", [req.body.device, req.body.location.longitude, req.body.location.latitude]);
   } else {
@@ -36,11 +62,11 @@ save_own_location_task = function(req, t) {
   }
 }
 
-retrieve_other_locations = function(req, t) {
+var retrieve_other_locations = function(req, t) {
   return t.any(QueryFile('../sql/locations.sql'), [req.body.device]);
 }
 
-save_messages_batch = function(req, t) {
+var save_messages_batch = function(req, t) {
   if (!req.body.hasOwnProperty("messages")) {
     return null;
   }
@@ -74,6 +100,10 @@ save_messages_batch = function(req, t) {
     delay_counter++;
   })
   return save_messages_batch;
+}
+
+var retrieve_chat_messages = function(req, t) {
+  return t.any("SELECT * FROM chat_messages WHERE timestamp > (NOW() - '$1 seconds'::INTERVAL)", [30]);
 }
 
 module.exports = router;

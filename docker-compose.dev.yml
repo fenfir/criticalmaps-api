@@ -47,3 +47,19 @@ services:
       URL: "postgres://bla:bla@postgres:5432/criticalmaps?sslmode=disable"
     links:
       - postgres
+
+  # phppgadmin:
+  #   image: jacksoncage/phppgadmin
+  #   depends_on:
+  #     - postgres
+  #   links:
+  #     - postgres
+  #   ports:
+  #     - "8082:80"
+  #   environment:
+  #     APACHE_SERVERNAME: localhost
+  #     POSTGRES_HOST: postgres
+  #     POSTGRES_PORT: 5432
+  #     POSTGRES_DEFAULTDB: criticalmaps
+  #   links:
+  #     - postgres
