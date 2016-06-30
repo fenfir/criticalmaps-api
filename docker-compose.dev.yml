@@ -1,39 +1,49 @@
-web:
-  build: .
-  dockerfile: Dockerfile.nodejs
-  ports:
-    # web server
-    - "3000:3000"
-    # node-inspector
-    - "5858:5858"
-    - "8080:8080"
-  environment:
-    NODE_ENV: development
-    DEBUG: "*"
-    POSTGRES_USER: bla
-    POSTGRES_PASSWORD: bla
-    POSTGRES_PORT: 5432
-  links:
-    - postgres
-  restart: always
-  volumes:
-    - .:/usr/src/app
-  entrypoint: npm run nodemonstart
+version: '2'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.nodejs
+    depends_on:
+      - postgres
+    ports:
+      # web server
+      - "3000:3000"
+      # node-inspector
+      - "5858:5858"
+      - "8080:8080"
+    environment:
+      NODE_ENV: development
+      DEBUG: "*"
+      POSTGRES_USER: bla
+      POSTGRES_PASSWORD: bla
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: criticalmaps
+    links:
+      - postgres
+    restart: always
+    volumes:
+      - .:/usr/src/app
+    entrypoint: npm run nodemonstart
 
-postgres:
-  build: .
-  dockerfile: Dockerfile.postgres
-  environment:
-    POSTGRES_USER: bla
-    POSTGRES_PASSWORD: bla
-  ports:
-      - "5432:5432"
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+    environment:
+      POSTGRES_USER: bla
+      POSTGRES_PASSWORD: bla
+      POSTGRES_DB: criticalmaps
+    ports:
+        - "5432:5432"
 
-phppgadmin:
-  image: jacksoncage/phppgadmin
-  ports:
-   - "1234:80"
-  environment:
-    POSTGRES_HOST: postgres
-    POSTGRES_PORT: 5432
-    APACHE_SERVERNAME: jacksoncage.se
+  pgweb:
+    image: microbox/pgweb
+    depends_on:
+      - postgres
+    ports:
+      - "8081:8080"
+    environment:
+      URL: "postgres://bla:bla@postgres:5432/criticalmaps?sslmode=disable"
+    links:
+      - postgres
