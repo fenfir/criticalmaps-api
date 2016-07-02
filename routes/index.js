@@ -7,50 +7,43 @@ router.post('/', function(req, res, next) {
   console.log(req.body); // your JSON
 
   db.tx(function(t1) {
-      return this.batch([
-        save_own_location_task(req, t1),
-        retrieve_other_locations(req, t1),
-        t1.tx(function(t2) {
-          return this.batch(save_messages_batch(req, t2));
-        }),
-        retrieve_chat_messages(req, t1)
+      return t1.batch([
+        save_messages_batch(req, t1),
+        save_own_location_task(req, t1)
       ]);
-    })
-    .then(function(data) {
-      var response_obj = {
-        locations: {},
-        chatMessages: {}
-      };
+    }).then(function(data_dont_care) {
+      db.tx(function(t1) {
+        return t1.batch([
+          retrieve_other_locations(req, t1),
+          retrieve_chat_messages(req, t1)
+        ])
+      }).then(function(data) {
+        var response_obj = {
+          locations: {},
+          chatMessages: {}
+        };
+        data[0].forEach(function(location_obj) {
+          response_obj.locations[location_obj.device] = {
+            "longitude": location_obj.longitude,
+            "latitude": location_obj.latitude,
+            "timestamp": location_obj.timestamp
+          }
+        });
 
-      data[1].forEach(function(location_obj) {
-        response_obj.locations[location_obj.device] = {
-          "longitude": location_obj.longitude,
-          "latitude": location_obj.latitude,
-          "timestamp": location_obj.timestamp
-        }
+        data[1].forEach(function(message_obj) {
+          response_obj.chatMessages[message_obj.identifier] = {
+            "message": message_obj.message,
+            "timestamp": message_obj.timestamp
+          }
+        });
+
+        res.send(response_obj);
+      }).catch(function(error) {
+        handle_error(error)
       });
-
-      data[3].forEach(function(message_obj) {
-        response_obj.chatMessages[message_obj.identifier] = {
-          "message": message_obj.text,
-          "timestamp": message_obj.timestamp
-        }
-      })
-
-      console.log("||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
-      console.log("||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
-      console.log(response_obj)
-
-      console.log("||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
-      console.log("||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
-
-      res.send(response_obj);
     })
     .catch(function(error) {
-      console.log("ERROR:", error.message || error);
-      res.status(500).send({
-        error: 'error!'
-      });
+      handle_error(error)
     });
 });
 
@@ -103,7 +96,14 @@ var save_messages_batch = function(req, t) {
 }
 
 var retrieve_chat_messages = function(req, t) {
-  return t.any("SELECT * FROM chat_messages WHERE timestamp > (NOW() - '$1 seconds'::INTERVAL)", [30]);
+  return t.any("SELECT * FROM chat_messages WHERE timestamp > (NOW() - '$1 minutes'::INTERVAL)", [30]);
+}
+
+var handle_error = function(error) {
+  console.log("ERROR:", error.message || error);
+  res.status(500).send({
+    error: 'error!'
+  });
 }
 
 module.exports = router;
