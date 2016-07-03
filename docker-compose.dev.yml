@@ -4,8 +4,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.nodejs
-    depends_on:
-      - postgres
     ports:
       # web server
       - "3000:3000"
@@ -41,7 +39,7 @@ services:
 
   pgweb:
     image: microbox/pgweb
-    depends_on:
+    links:
       - postgres
     ports:
       - "8081:8080"

@@ -4,10 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.nodejs
-    depends_on:
-      - postgres
     ports:
-      # web server
       - "3000:3000"
     expose:
       - "3000"
@@ -30,5 +27,6 @@ services:
       POSTGRES_USER: bla
       POSTGRES_PASSWORD: bla
       POSTGRES_DB: criticalmaps
-    ports:
-        - "5432:5432"
+    expose:
+        - "5432"
+    restart: always
