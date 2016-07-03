@@ -9,7 +9,7 @@ services:
     expose:
       - "3000"
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       DEBUG: "*"
       POSTGRES_USER: bla
       POSTGRES_PASSWORD: bla
