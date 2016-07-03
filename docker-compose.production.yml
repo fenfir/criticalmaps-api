@@ -1,0 +1,34 @@
+version: '2'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.nodejs
+    depends_on:
+      - postgres
+    ports:
+      # web server
+      - "3000:3000"
+    expose:
+      - "3000"
+    environment:
+      NODE_ENV: development
+      DEBUG: "*"
+      POSTGRES_USER: bla
+      POSTGRES_PASSWORD: bla
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: criticalmaps
+    links:
+      - postgres
+    restart: always
+
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+    environment:
+      POSTGRES_USER: bla
+      POSTGRES_PASSWORD: bla
+      POSTGRES_DB: criticalmaps
+    ports:
+        - "5432:5432"
